@@ -8,17 +8,18 @@ import java.util.*;
 					else{return -1;}
 				}
 			});
-			System.out.println("Hello World");
 			PNode p = new PNode();
 			p.cost = 5;
-			System.out.println("p.cost = ");
-			System.out.println(p.cost);
 			PNode q = new PNode();
 			q.cost = 2;
-			System.out.println("q.cost = ");
-			System.out.println(q.cost);
+			PNode r = new PNode();
+			r.cost = 10;
+			PNode s = new PNode();
+			s:s.cost = 1;
 			pnQueue.add(p);
 			pnQueue.add(q);
+			pnQueue.add(r);
+			pnQueue.add(s);
 			PNode node = pnQueue.poll();
 			while(node != null)
 			{
