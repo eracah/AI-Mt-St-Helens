@@ -1,5 +1,8 @@
 import java.util.*;
 
+ public class PNode{
+ 	int cost;
+}
 	public class PQueue{
 		public static void main(String[] Args){
 			PriorityQueue<PNode> pnQueue = new PriorityQueue<PNode>(10, new Comparator<PNode>(){
