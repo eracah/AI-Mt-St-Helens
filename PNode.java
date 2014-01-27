@@ -1,5 +1,19 @@
 import java.util.*;
+import java.awt.Point;
 
- public class PNode{
- 	int cost;
-}
+//class PNode;
+
+ public class PNode
+ {
+ 		double cost;
+ 		PNode previous;
+ 		Point pt;
+
+ 		public PNode(Point coord, PNode pv, double c)
+ 		{
+ 			cost = c;
+ 			previous = pv;
+ 			pt = coord;
+ 		}
+ 
+ }

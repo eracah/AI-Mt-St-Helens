@@ -13,20 +13,47 @@ import java.util.*; //todo: shrink this down
  * 
  * @author Leonid Shamis
  */
-public class StupidAI implements AIModule
+public class DecentAI implements AIModule
 {
     /// Creates the path to the goal.
     public List<Point> createPath(final TerrainMap map)
     {
+        PriorityQueue<PNode> pnQueue = new PriorityQueue<PNode>(10, new Comparator<PNode>(){
+            public int compare(PNode p1, PNode p2){ 
+                if(p1.cost >= p2.cost){return 1;} 
+                else{return -1;}
+                }
+            });
         // Holds the resulting path
         final ArrayList<Point> path = new ArrayList<Point>();
 
-        // Keep track of where we are and add the start point.
-        final Point CurrentPoint = map.getStartPoint();
+       
+
+        //get start and end point
+        final Point StartPoint = map.getStartPoint();
+        final Point GoalPoint = map.getEndPoint();
+
+         //Holds the neighbors
+        Point Neighbors[];
+
+
+        PNode CurrentNode = new PNode(StartPoint, null, 0);
         
+        while(CurrentNode.pt != GoalPoint )
+        {
+            Neighbors = map.getNeighbors(CurrentNode.pt);
+            for(int i = 0; i < Neighbors.length; i++ )
+            {
+                Point nPt = Neighbors[i];
+                double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost; //+Heuristic
+                PNode p = new PNode(nPt, CurrentNode, cost);
+                pnQueue.add(p); // test to see if actually contains anything
+            }
+            //pop from pqueue
+        }
 
 
-        path.add(new Point(CurrentPoint));
+        ///path.add(new Point(CurrentPoint));
 
         
         return path;
