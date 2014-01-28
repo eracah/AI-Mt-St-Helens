@@ -1,4 +1,3 @@
-//Comment
 import java.awt.Point;
 /*import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +12,21 @@ import java.util.*; //todo: shrink this down
  * 
  * @author Leonid Shamis
  */
-public class DecentAI implements AIModule
-{
+public class DecentAI implements AIModule{
+    public class PNode
+    {
+        double cost;
+        PNode previous;
+        Point pt;
+
+        public PNode(Point p, PNode prev, double c)
+        {
+            cost = c;
+            previous = prev;
+            pt = p;
+        }
+    }
+
     /// Creates the path to the goal.
     public List<Point> createPath(final TerrainMap map)
     {
@@ -24,10 +36,9 @@ public class DecentAI implements AIModule
                 else{return -1;}
                 }
             });
+
         // Holds the resulting path
         final ArrayList<Point> path = new ArrayList<Point>();
-
-       
 
         //get start and end point
         final Point StartPoint = map.getStartPoint();
@@ -36,19 +47,21 @@ public class DecentAI implements AIModule
          //Holds the neighbors
         Point Neighbors[];
 
-
         PNode CurrentNode = new PNode(StartPoint, null, 0);
         
-        while(CurrentNode.pt != GoalPoint )
+        while(CurrentNode.pt != GoalPoint)
         {
             Neighbors = map.getNeighbors(CurrentNode.pt);
-            for(int i = 0; i < Neighbors.length; i++ )
+            for(int i = 0; i < Neighbors.length; i++)
             {
                 Point nPt = Neighbors[i];
                 double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost; //+Heuristic
                 PNode p = new PNode(nPt, CurrentNode, cost);
                 pnQueue.add(p); // test to see if actually contains anything
+                System.out.println("Added node: ");
+                System.out.println(p);
             }
+
             //pop from pqueue
         }
 
