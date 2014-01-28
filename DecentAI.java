@@ -50,7 +50,7 @@ public class DecentAI implements AIModule{
         PNode CurrentNode = new PNode(StartPoint, null, 0);
         
         int count = 0;
-        while(CurrentNode.pt != GoalPoint && count < 8)
+        while(CurrentNode.pt != GoalPoint && count < 20)
         {
             count++;
             Neighbors = map.getNeighbors(CurrentNode.pt);
@@ -60,13 +60,15 @@ public class DecentAI implements AIModule{
                 double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost; //+Heuristic
                 PNode p = new PNode(nPt, CurrentNode, cost);
                 pnQueue.add(p); // test to see if actually contains anything
-                System.out.println("Added node with cost: ");
-                System.out.println(p.cost);
+                System.out.println("Added node with cost: " + p.cost + " coordinates: " + p.pt);
             }
-            PNode temp = pnQueue.poll();
-            System.out.println("PNode with cost = " + temp.cost + " is at the top of the min heap"); //see whats at the top of the min heap
+            CurrentNode = pnQueue.remove();
+            //System.out.println("PNode with cost = " + CurrentNode.cost + " is at the top of the min heap");
+            //AI is rechecking traversed nodes. Implement a structure (hash table?) that keeps track of closed nodes.
+
         }
 
+        System.out.println("CurrentNode = " + CurrentNode.pt + " \n GoalNode = " + GoalPoint);
 
         ///path.add(new Point(CurrentPoint));
 
