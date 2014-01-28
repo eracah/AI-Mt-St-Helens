@@ -58,8 +58,6 @@ public class DecentAI implements AIModule{
                 double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost; //+Heuristic
                 PNode p = new PNode(nPt, CurrentNode, cost);
                 pnQueue.add(p); // test to see if actually contains anything
-                System.out.println("Added node: ");
-                System.out.println(p);
             }
 
             //pop from pqueue
