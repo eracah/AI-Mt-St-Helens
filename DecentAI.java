@@ -60,13 +60,11 @@ public class DecentAI implements AIModule{
                 double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost; //+Heuristic
                 PNode p = new PNode(nPt, CurrentNode, cost);
                 pnQueue.add(p); // test to see if actually contains anything
-                System.out.println("Added node with coordinates: ");
-                System.out.println(p.pt);
+                System.out.println("Added node with cost: ");
+                System.out.println(p.cost);
             }
             PNode temp = pnQueue.poll();
-            System.out.println("PNode: "); //see whats at the top of the min heap
-            System.out.println(temp);
-            System.out.println(" is at the top of the min heap.");
+            System.out.println("PNode with cost = " + temp.cost + " is at the top of the min heap"); //see whats at the top of the min heap
         }
 
 
