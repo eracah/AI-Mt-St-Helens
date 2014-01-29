@@ -62,7 +62,7 @@ public class DecentAI implements AIModule{
                 pnQueue.add(p); // test to see if actually contains anything
                 System.out.println("Added node with cost: " + p.cost + " coordinates: " + p.pt);
             }
-            CurrentNode = pnQueue.remove();
+            CurrentNode = pnQueue.poll();
             //System.out.println("PNode with cost = " + CurrentNode.cost + " is at the top of the min heap");
             //AI is rechecking traversed nodes. Implement a structure (hash table?) that keeps track of closed nodes.
 
