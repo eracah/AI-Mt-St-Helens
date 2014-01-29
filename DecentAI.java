@@ -50,6 +50,8 @@ public class DecentAI implements AIModule{
         final Point StartPoint = map.getStartPoint();
         final Point GoalPoint = map.getEndPoint();
 
+        //System.out.println("Goal:" + GoalPoint.x +" " + GoalPoint.y);
+
          //Holds the neighbors
         Point Neighbors[];
 
@@ -65,23 +67,32 @@ public class DecentAI implements AIModule{
             {
                 if (!(Closed[Neighbors[i].x][Neighbors[i].y]))
                 {
+
                     Point nPt = Neighbors[i];
                     double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost; //+Heuristic
                     PNode p = new PNode(nPt, CurrentNode, cost);
                     pnQueue.add(p); // test to see if actually contains anything
-                    System.out.println("Added node with cost: " + p.cost + " coordinates: " + p.pt);
+                    //System.out.println("Added node with cost: " + p.cost + " coordinates: " + p.pt + "Visited?" + Closed[nPt.x][nPt.y]);
 
                 }
                 
             }
+
             CurrentNode = pnQueue.poll();
+            while (Closed[CurrentNode.pt.x][CurrentNode.pt.y])
+            {
+                CurrentNode = pnQueue.poll();
+            }
+            
+            System.out.println("Popped node with cost: " + CurrentNode.cost + " coordinates: " + CurrentNode.pt);
+
             Closed[CurrentNode.pt.x][CurrentNode.pt.y] = true;
             //System.out.println("PNode with cost = " + CurrentNode.cost + " is at the top of the min heap");
             //AI is rechecking traversed nodes. Implement a structure (hash table?) that keeps track of closed nodes.
 
         }
 
-        System.out.println("CurrentNode = " + CurrentNode.pt + " \n GoalNode = " + GoalPoint);
+        //System.out.println("CurrentNode = " + CurrentNode.pt + " \n GoalNode = " + GoalPoint);
 
         ///path.add(new Point(CurrentPoint));
 
