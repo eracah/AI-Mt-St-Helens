@@ -46,7 +46,7 @@ public class DecentAI implements AIModule{
 
 
         // Holds the resulting path
-        final ArrayList<Point> path = new ArrayList<Point>();
+        ArrayList<Point> path = new ArrayList<Point>();
 
         //get start and end point
         final Point StartPoint = map.getStartPoint();
@@ -86,14 +86,14 @@ public class DecentAI implements AIModule{
                 CurrentNode = pnQueue.poll();
             }
             
-            System.out.println("Popped node with cost: " + CurrentNode.cost + " coordinates: " + CurrentNode.pt);
+            //System.out.println("Popped node with cost: " + CurrentNode.cost + " coordinates: " + CurrentNode.pt);
 
             Closed[CurrentNode.pt.x][CurrentNode.pt.y] = true;
             //System.out.println("PNode with cost = " + CurrentNode.cost + " is at the top of the min heap");
             //AI is rechecking traversed nodes. Implement a structure (hash table?) that keeps track of closed nodes.
 
         }
-
+        path = getPrev(CurrentNode, path);
         //System.out.println("CurrentNode = " + CurrentNode.pt + " \n GoalNode = " + GoalPoint);
         // while(!(CurrentNode.pt.x == StartPoint.x && CurrentNode.pt.y == StartPoint.y))
         // {
@@ -104,5 +104,20 @@ public class DecentAI implements AIModule{
         //path.add(new Point(CurrentNode.pt));
         
         return path;
+    }
+     public ArrayList<Point> getPrev(PNode node, ArrayList<Point> path )
+    {
+        if (node.previous == null)
+        {
+           path.add(new Point(node.pt));
+           return path; 
+        }
+            
+        else
+        {
+            path = getPrev(node.previous, path);
+            path.add(new Point(node.pt));
+            return path;
+        }
     }
 }
