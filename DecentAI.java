@@ -39,10 +39,10 @@ public class DecentAI implements AIModule{
 
 
         //make 2d array to check if coordinates closed 
-        int Closed[][] = new int[map.getWidth()][map.getHeight()];
+        boolean Closed[][] = new boolean[map.getWidth()][map.getHeight()];
         
-        System.out.println(Closed[3][5]);
-        
+
+
         // Holds the resulting path
         final ArrayList<Point> path = new ArrayList<Point>();
 
@@ -54,21 +54,28 @@ public class DecentAI implements AIModule{
         Point Neighbors[];
 
         PNode CurrentNode = new PNode(StartPoint, null, 0);
-        
+        Closed[CurrentNode.pt.x][CurrentNode.pt.y] = true;
+
         int count = 0;
-        while(CurrentNode.pt != GoalPoint && count < 20)
+        while(CurrentNode.pt != GoalPoint)
         {
-            count++;
+            
             Neighbors = map.getNeighbors(CurrentNode.pt);
             for(int i = 0; i < Neighbors.length; i++)
             {
-                Point nPt = Neighbors[i];
-                double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost; //+Heuristic
-                PNode p = new PNode(nPt, CurrentNode, cost);
-                pnQueue.add(p); // test to see if actually contains anything
-                System.out.println("Added node with cost: " + p.cost + " coordinates: " + p.pt);
+                if (!(Closed[Neighbors[i].x][Neighbors[i].y]))
+                {
+                    Point nPt = Neighbors[i];
+                    double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost; //+Heuristic
+                    PNode p = new PNode(nPt, CurrentNode, cost);
+                    pnQueue.add(p); // test to see if actually contains anything
+                    System.out.println("Added node with cost: " + p.cost + " coordinates: " + p.pt);
+
+                }
+                
             }
             CurrentNode = pnQueue.poll();
+            Closed[CurrentNode.pt.x][CurrentNode.pt.y] = true;
             //System.out.println("PNode with cost = " + CurrentNode.cost + " is at the top of the min heap");
             //AI is rechecking traversed nodes. Implement a structure (hash table?) that keeps track of closed nodes.
 
