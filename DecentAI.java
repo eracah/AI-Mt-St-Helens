@@ -17,12 +17,14 @@ public class DecentAI implements AIModule{
     {
         double cost;
         PNode previous;
+        //PNode next;
         Point pt;
 
         public PNode(Point p, PNode prev, double c)
         {
             cost = c;
             previous = prev;
+            //next = n;
             pt = p;
         }
     }
@@ -59,7 +61,7 @@ public class DecentAI implements AIModule{
         Closed[CurrentNode.pt.x][CurrentNode.pt.y] = true;
 
         int count = 0;
-        while(CurrentNode.pt != GoalPoint)
+        while(!(CurrentNode.pt.x == GoalPoint.x && CurrentNode.pt.y == GoalPoint.y))
         {
             
             Neighbors = map.getNeighbors(CurrentNode.pt);
@@ -93,9 +95,13 @@ public class DecentAI implements AIModule{
         }
 
         //System.out.println("CurrentNode = " + CurrentNode.pt + " \n GoalNode = " + GoalPoint);
+        // while(!(CurrentNode.pt.x == StartPoint.x && CurrentNode.pt.y == StartPoint.y))
+        // {
+        //    CurrentNode = CurrentNode.previous;
 
-        ///path.add(new Point(CurrentPoint));
+        // }
 
+        //path.add(new Point(CurrentNode.pt));
         
         return path;
     }
