@@ -37,6 +37,12 @@ public class DecentAI implements AIModule{
                 }
             });
 
+
+        //make 2d array to check if coordinates closed 
+        int Closed[][] = new int[map.getWidth()][map.getHeight()];
+        
+        System.out.println(Closed[3][5]);
+        
         // Holds the resulting path
         final ArrayList<Point> path = new ArrayList<Point>();
 
