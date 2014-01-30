@@ -3,6 +3,7 @@ import java.awt.Point;
 import java.util.List;
 */
 import java.util.*; //todo: shrink this down
+import java.lang.Math;
 
 /// A sample AI that takes a very suboptimal path.
 /**
@@ -17,7 +18,6 @@ public class DecentAI implements AIModule{
     {
         double cost;
         PNode previous;
-        //PNode next;
         Point pt;
 
         public PNode(Point p, PNode prev, double c)
@@ -27,6 +27,11 @@ public class DecentAI implements AIModule{
             //next = n;
             pt = p;
         }
+    }
+
+    public double heuristic(PNode c, Point gp, TerrainMap map)
+    {
+    	return (Math.sqrt(Math.pow((c.pt.x - gp.x), 2) + Math.pow((c.pt.y - gp.y), 2)));// + Math.pow((map.getTile(c.pt) - map.getTile(gp)), 2)));
     }
 
     /// Creates the path to the goal.
@@ -71,7 +76,8 @@ public class DecentAI implements AIModule{
                 {
 
                     Point nPt = Neighbors[i];
-                    double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost; //+Heuristic
+                    double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost + heuristic(CurrentNode, GoalPoint, map); //+Heuristic
+                    //double temp = map.getTile(CurrentNode.pt);
                     PNode p = new PNode(nPt, CurrentNode, cost);
                     pnQueue.add(p); // test to see if actually contains anything
                     //System.out.println("Added node with cost: " + p.cost + " coordinates: " + p.pt + "Visited?" + Closed[nPt.x][nPt.y]);
@@ -105,7 +111,7 @@ public class DecentAI implements AIModule{
         
         return path;
     }
-     public ArrayList<Point> getPrev(PNode node, ArrayList<Point> path )
+     public ArrayList<Point> getPrev(PNode node, ArrayList<Point> path)
     {
         if (node.previous == null)
         {
