@@ -29,9 +29,41 @@ public class DecentAI implements AIModule{
         }
     }
 
+    public int getLeastNodes(Point curPt, Point goalPt)
+    {
+        int xStep, yStep;
+        int counter;
+        Point testPt = curPt;
+        if (goalPt.x > curPt.x)
+            xStep = 1;
+        else
+            xStep = -1;
+
+        if (goalPt.y > curPt.y)
+            yStep = 1;
+        else
+            yStep = -1;
+
+        counter = 0;
+        //while neither coordinate is equal to the corresponding goal coordinates
+        while(testPt.x != goalPt.x && testPt.y != goalPt.y)
+        {
+            testPt.x += xStep;
+            testPt.y += yStep;
+            counter ++;
+        }
+        if (goalPt.x != testPt.x)
+            counter += (goalPt.x - curPt.x)*xStep;
+        else
+            counter += (goalPt.y - curPt.y)*yStep;
+
+        return counter;
+
+    }
     public double heuristic(PNode c, Point gp, TerrainMap map)
     {
-    	return (Math.sqrt(Math.pow((c.pt.x - gp.x), 2) + Math.pow((c.pt.y - gp.y), 2)));// + Math.pow((map.getTile(c.pt) - map.getTile(gp)), 2)));
+        return getLeastNodes(c.pt, gp);
+    	//return (Math.sqrt(Math.pow((c.pt.x - gp.x), 2) + Math.pow((c.pt.y - gp.y), 2)));// + Math.pow((map.getTile(c.pt) - map.getTile(gp)), 2)));
     }
 
     /// Creates the path to the goal.
@@ -63,6 +95,14 @@ public class DecentAI implements AIModule{
         Point Neighbors[];
 
         PNode CurrentNode = new PNode(StartPoint, null, 0);
+
+        //Point pt1 = new Point(4,3);
+        //Point pt2 = new Point(12,9);
+
+
+        //int num = getLeastNodes(pt1, pt2);
+        //System.out.println(num);
+
         Closed[CurrentNode.pt.x][CurrentNode.pt.y] = true;
 
         int count = 0;
@@ -76,7 +116,7 @@ public class DecentAI implements AIModule{
                 {
 
                     Point nPt = Neighbors[i];
-                    double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost + heuristic(CurrentNode, GoalPoint, map); //+Heuristic
+                    double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost; //+ heuristic(CurrentNode, GoalPoint, map);
                     //double temp = map.getTile(CurrentNode.pt);
                     PNode p = new PNode(nPt, CurrentNode, cost);
                     pnQueue.add(p); // test to see if actually contains anything
@@ -100,14 +140,8 @@ public class DecentAI implements AIModule{
 
         }
         path = getPrev(CurrentNode, path);
-        //System.out.println("CurrentNode = " + CurrentNode.pt + " \n GoalNode = " + GoalPoint);
-        // while(!(CurrentNode.pt.x == StartPoint.x && CurrentNode.pt.y == StartPoint.y))
-        // {
-        //    CurrentNode = CurrentNode.previous;
-
-        // }
-
-        //path.add(new Point(CurrentNode.pt));
+       
+        
         
         return path;
     }
