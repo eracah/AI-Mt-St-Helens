@@ -60,9 +60,9 @@ public class DecentAI implements AIModule{
         return counter;
 
     }
-    public double heuristic(PNode c, Point gp, TerrainMap map)
+    public double heuristic(Point c, Point gp, TerrainMap map)
     {
-        return getLeastNodes(c.pt, gp);
+        return getLeastNodes(c, gp);
     	//return (Math.sqrt(Math.pow((c.pt.x - gp.x), 2) + Math.pow((c.pt.y - gp.y), 2)));// + Math.pow((map.getTile(c.pt) - map.getTile(gp)), 2)));
     }
 
@@ -116,7 +116,8 @@ public class DecentAI implements AIModule{
                 {
 
                     Point nPt = Neighbors[i];
-                    double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost; //+ heuristic(CurrentNode, GoalPoint, map);
+                    Point cPt = new Point(CurrentNode.pt.x,CurrentNode.pt.y);
+                    double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost + heuristic(cPt, GoalPoint, map);
                     //double temp = map.getTile(CurrentNode.pt);
                     PNode p = new PNode(nPt, CurrentNode, cost);
                     pnQueue.add(p); // test to see if actually contains anything
