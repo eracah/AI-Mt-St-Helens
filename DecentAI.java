@@ -67,8 +67,15 @@ public class DecentAI implements AIModule{
         double curHeight = map.getTile(cpt);
         double goalHeight = map.getTile(gp);
         double diff = goalHeight - curHeight;
-        double exponent = diff / leastNodes;
-        return Math.exp(exponent) * leastNodes;
+        double baseStep = Math.floor(diff / leastNodes);
+        double n = diff % leastNodes;
+        if(diff < 0)
+            n = (-1 * (diff)) % leastNodes;
+        
+        return (n * Math.exp(baseStep + 1) + (leastNodes - n) * Math.exp(baseStep));
+
+        // double exponent = diff / leastNodes;
+        // return Math.exp(exponent) * leastNodes;
     	//return (Math.sqrt(Math.pow((c.pt.x - gp.x), 2) + Math.pow((c.pt.y - gp.y), 2)));// + Math.pow((map.getTile(c.pt) - map.getTile(gp)), 2)));
     }
 
@@ -99,7 +106,6 @@ public class DecentAI implements AIModule{
 
          //Holds the neighbors
         Point Neighbors[];
-
         
         PNode CurrentNode = new PNode(StartPoint, null, 0);
 

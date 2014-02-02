@@ -121,10 +121,10 @@ public class LinearAI implements AIModule{
             {
                 if (!(Closed[Neighbors[i].x][Neighbors[i].y]))
                 {
-
                     Point nPt = Neighbors[i];
+                    Point newNpt = new Point(nPt.x, nPt.y);
                     Point cPt = new Point(CurrentNode.pt.x,CurrentNode.pt.y);
-                    double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost + heuristic(cPt, GoalPoint, map);
+                    double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost + heuristic(newNpt, GoalPoint, map);
                     PNode p = new PNode(nPt, CurrentNode, cost);
                     pnQueue.add(p); // test to see if actually contains anything
                     //System.out.println("Added node with cost: " + p.cost + " coordinates: " + p.pt + "Visited?" + Closed[nPt.x][nPt.y]);
