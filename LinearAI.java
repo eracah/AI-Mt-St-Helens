@@ -29,7 +29,7 @@ public class LinearAI implements AIModule{
         }
     }
 
-   /* public int getLeastNodes(Point curPt, Point goalPt)
+   public int getLeastNodes(Point curPt, Point goalPt)
     {
         int xStep, yStep;
         int counter;
@@ -59,10 +59,17 @@ public class LinearAI implements AIModule{
 
         return counter;
 
-    }*/
+    }
     public double heuristic(Point c, Point gp, TerrainMap map)
     {
-    	return 0.0;
+    	Point cpt = new Point(c.x, c.y);
+        int leastNodes = getLeastNodes(c, gp);
+        double curHeight = map.getTile(cpt);
+        double goalHeight = map.getTile(gp);
+        double diff = goalHeight - curHeight;
+        double increment = diff / leastNodes;
+        double lastNode = goalHeight - increment;
+        return leastNodes * (goalHeight / (lastNode + 1));
     }
 
     /// Creates the path to the goal.
@@ -117,7 +124,7 @@ public class LinearAI implements AIModule{
 
                     Point nPt = Neighbors[i];
                     Point cPt = new Point(CurrentNode.pt.x,CurrentNode.pt.y);
-                    double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost; //+ heuristic(cPt, GoalPoint, map);
+                    double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost + heuristic(cPt, GoalPoint, map);
                     PNode p = new PNode(nPt, CurrentNode, cost);
                     pnQueue.add(p); // test to see if actually contains anything
                     //System.out.println("Added node with cost: " + p.cost + " coordinates: " + p.pt + "Visited?" + Closed[nPt.x][nPt.y]);
