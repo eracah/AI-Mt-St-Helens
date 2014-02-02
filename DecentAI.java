@@ -19,27 +19,32 @@ public class DecentAI implements AIModule{
         double cost;
         PNode previous;
         Point pt;
+        double height;
 
-        public PNode(Point p, PNode prev, double c)
+        public PNode(Point p, PNode prev, double c, double h)
         {
             cost = c;
             previous = prev;
             //next = n;
             pt = p;
+            height = h;
         }
     }
 
-    public int getLeastNodes(Point curPt, Point goalPt)
+    public int getLeastNodes(Point c, Point goalPt)
     {
+        int x = c.x;
+        int y = c.y;
+        testPt = new Point(x, y);
         int xStep, yStep;
         int counter;
-        Point testPt = curPt;
-        if (goalPt.x > curPt.x)
+      
+        if (goalPt.x > testPt.x)
             xStep = 1;
         else
             xStep = -1;
 
-        if (goalPt.y > curPt.y)
+        if (goalPt.y > testPt.y)
             yStep = 1;
         else
             yStep = -1;
@@ -53,17 +58,19 @@ public class DecentAI implements AIModule{
             counter ++;
         }
         if (goalPt.x != testPt.x)
-            counter += (goalPt.x - curPt.x)*xStep;
+            counter += (goalPt.x - testPt.x) * xStep;
         else
-            counter += (goalPt.y - curPt.y)*yStep;
+            counter += (goalPt.y - testPt.y) * yStep;
 
         return counter;
 
     }
     public double heuristic(Point c, Point gp, TerrainMap map)
     {
-    	Point cpt = new Point(c.x, c.y);
-        int leastNodes = getLeastNodes(c, gp);
+    	int x = c.x;
+        int y = c.y;
+        cpt = new Point(x, y);
+        int leastNodes = getLeastNodes(cpt, gp);
         double curHeight = map.getTile(cpt);
         double goalHeight = map.getTile(gp);
         double diff = goalHeight - curHeight;
@@ -107,7 +114,7 @@ public class DecentAI implements AIModule{
          //Holds the neighbors
         Point Neighbors[];
         
-        PNode CurrentNode = new PNode(StartPoint, null, 0);
+        PNode CurrentNode = new PNode(StartPoint, null, 0, map.getTile(CurrentNode.pt));
 
         //Point pt1 = new Point(4,3);
         //Point pt2 = new Point(12,9);
@@ -129,54 +136,31 @@ public class DecentAI implements AIModule{
                 {
 
                     Point nPt = Neighbors[i];
-                    Point cPt = new Point(CurrentNode.pt.x,CurrentNode.pt.y);
                     double curHeight = map.getTile(CurrentNode.pt);
                     double neighHeight = map.getTile(nPt);
                     double neighborCost = map.getCost(CurrentNode.pt, nPt);
                     double prevCost = CurrentNode.cost;
-                    double heur = heuristic(cPt, GoalPoint, map);
+                    double heur = heuristic(CurrentNode.pt, GoalPoint, map);
                     double cost = neighborCost + prevCost + heur;
-                    //double temp = map.getTile(CurrentNode.pt);
-                    PNode p = new PNode(nPt, CurrentNode, cost);
+                    PNode p = new PNode(nPt, CurrentNode, cost, map.getTile(nPt));
                     pnQueue.add(p); // test to see if actually contains anything
                     //System.out.println("Added node with cost: " + p.cost + " coordinates: " + p.pt + "Visited?" + Closed[nPt.x][nPt.y]);
 
                 }
                 
             }
-           
-        
-            double prevCost = CurrentNode.cost;
-            
-
-            PNode prevNode = new PNode(CurrentNode.pt, null, prevCost);
-
+          
             CurrentNode = pnQueue.poll();
             while (Closed[CurrentNode.pt.x][CurrentNode.pt.y])
             {
                 CurrentNode = pnQueue.poll();
             }
-            
-            if (prevCost > CurrentNode.cost)
-                System.out.println("Popped node with cost: " + CurrentNode.cost + " coordinates: " + CurrentNode.pt);
-
-          
-
-            
-            
 
             Closed[CurrentNode.pt.x][CurrentNode.pt.y] = true;
-            //System.out.println("PNode with cost = " + CurrentNode.cost + " is at the top of the min heap");
-            //AI is rechecking traversed nodes. Implement a structure (hash table?) that keeps track of closed nodes.
+           
 
         }
         path = getPrev(CurrentNode, path);
-        /*for (int i = 0; i < path.length; i++)
-        {
-            System.out.println(path[i])
-        }*/
-        
-        
         return path;
     }
      public ArrayList<Point> getPrev(PNode node, ArrayList<Point> path)
