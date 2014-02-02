@@ -62,7 +62,13 @@ public class DecentAI implements AIModule{
     }
     public double heuristic(Point c, Point gp, TerrainMap map)
     {
-        return getLeastNodes(c, gp);
+    	Point cpt = new Point(c.x, c.y);
+        int leastNodes = getLeastNodes(c, gp);
+        double curHeight = map.getTile(cpt);
+        double goalHeight = map.getTile(gp);
+        double diff = goalHeight - curHeight;
+        double exponent = diff / leastNodes;
+        return Math.exp(exponent) * leastNodes;
     	//return (Math.sqrt(Math.pow((c.pt.x - gp.x), 2) + Math.pow((c.pt.y - gp.y), 2)));// + Math.pow((map.getTile(c.pt) - map.getTile(gp)), 2)));
     }
 
@@ -94,6 +100,7 @@ public class DecentAI implements AIModule{
          //Holds the neighbors
         Point Neighbors[];
 
+        
         PNode CurrentNode = new PNode(StartPoint, null, 0);
 
         //Point pt1 = new Point(4,3);
@@ -117,7 +124,12 @@ public class DecentAI implements AIModule{
 
                     Point nPt = Neighbors[i];
                     Point cPt = new Point(CurrentNode.pt.x,CurrentNode.pt.y);
-                    double cost = map.getCost(CurrentNode.pt, nPt) + CurrentNode.cost + heuristic(cPt, GoalPoint, map);
+                    double curHeight = map.getTile(CurrentNode.pt);
+                    double neighHeight = map.getTile(nPt);
+                    double neighborCost = map.getCost(CurrentNode.pt, nPt);
+                    double prevCost = CurrentNode.cost;
+                    double heur = heuristic(cPt, GoalPoint, map);
+                    double cost = neighborCost + prevCost + heur;
                     //double temp = map.getTile(CurrentNode.pt);
                     PNode p = new PNode(nPt, CurrentNode, cost);
                     pnQueue.add(p); // test to see if actually contains anything
@@ -126,6 +138,12 @@ public class DecentAI implements AIModule{
                 }
                 
             }
+           
+        
+            double prevCost = CurrentNode.cost;
+            
+
+            PNode prevNode = new PNode(CurrentNode.pt, null, prevCost);
 
             CurrentNode = pnQueue.poll();
             while (Closed[CurrentNode.pt.x][CurrentNode.pt.y])
@@ -133,7 +151,13 @@ public class DecentAI implements AIModule{
                 CurrentNode = pnQueue.poll();
             }
             
-            //System.out.println("Popped node with cost: " + CurrentNode.cost + " coordinates: " + CurrentNode.pt);
+            if (prevCost > CurrentNode.cost)
+                System.out.println("Popped node with cost: " + CurrentNode.cost + " coordinates: " + CurrentNode.pt);
+
+          
+
+            
+            
 
             Closed[CurrentNode.pt.x][CurrentNode.pt.y] = true;
             //System.out.println("PNode with cost = " + CurrentNode.cost + " is at the top of the min heap");
@@ -141,7 +165,10 @@ public class DecentAI implements AIModule{
 
         }
         path = getPrev(CurrentNode, path);
-       
+        /*for (int i = 0; i < path.length; i++)
+        {
+            System.out.println(path[i])
+        }*/
         
         
         return path;
