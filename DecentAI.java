@@ -134,15 +134,15 @@ public class DecentAI implements AIModule{
                     double prevCost = CurrentNode.cost;
                     double curHeur = heuristic(CurrentNode.pt, GoalPoint, map);
                     double heur = heuristic(nPt, GoalPoint, map);
-                    double cost = neighborCost + prevCost + heur;
+                    double cost = neighborCost + prevCost;// + heur;
                     PNode p = new PNode(nPt, CurrentNode, cost, map.getTile(nPt));
-                    if (curHeur > heur + neighborCost)
-                    {
-                    	System.out.println(neighHeight);
-                        System.out.println("WTF" + CurrentNode.pt + " " + nPt);
-                        System.out.println(cLnodes);
-                        System.out.println(nLnodes);
-                    }
+                    // if (curHeur > heur + neighborCost)
+                    // {
+                    // 	System.out.println(neighHeight);
+                    //     System.out.println("WTF" + CurrentNode.pt + " " + nPt);
+                    //     System.out.println(cLnodes);
+                    //     System.out.println(nLnodes);
+                    // }
                     pnQueue.add(p); // test to see if actually contains anything
                     //System.out.println("Added node with cost: " + p.cost + " coordinates: " + p.pt + "Visited?" + Closed[nPt.x][nPt.y]);
 
@@ -157,8 +157,15 @@ public class DecentAI implements AIModule{
             }
 
             Closed[CurrentNode.pt.x][CurrentNode.pt.y] = true;
-           
-
+           if(heuristic(CurrentNode.previous.pt, GoalPoint, map) > (heuristic(CurrentNode.pt, GoalPoint, map) + map.getCost(CurrentNode.previous.pt, CurrentNode.pt)))
+           {
+                if(CurrentNode.height > CurrentNode.previous.height)
+                {
+                    System.out.println("CurrentNode height: " + CurrentNode.height + " least Nodes: " + getLeastNodes(CurrentNode.pt, GoalPoint));
+                    System.out.println("PreviousNode height " + CurrentNode.previous.height + " least Nodes: " + getLeastNodes(CurrentNode.previous.pt, GoalPoint));
+                    System.out.println("Cost: " + map.getCost(CurrentNode.previous.pt, CurrentNode.pt));
+                }
+           }
         }
         path = getPrev(CurrentNode, path);
         return path;
