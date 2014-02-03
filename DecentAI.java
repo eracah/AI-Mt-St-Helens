@@ -35,7 +35,7 @@ public class DecentAI implements AIModule{
     {
         int x = c.x;
         int y = c.y;
-        testPt = new Point(x, y);
+        Point testPt = new Point(x, y);
         int xStep, yStep;
         int counter;
       
@@ -50,6 +50,7 @@ public class DecentAI implements AIModule{
             yStep = -1;
 
         counter = 0;
+        
         //while neither coordinate is equal to the corresponding goal coordinates
         while(testPt.x != goalPt.x && testPt.y != goalPt.y)
         {
@@ -69,7 +70,7 @@ public class DecentAI implements AIModule{
     {
     	int x = c.x;
         int y = c.y;
-        cpt = new Point(x, y);
+        Point cpt = new Point(x, y);
         int leastNodes = getLeastNodes(cpt, gp);
         double curHeight = map.getTile(cpt);
         double goalHeight = map.getTile(gp);
@@ -80,10 +81,6 @@ public class DecentAI implements AIModule{
             n = (-1 * (diff)) % leastNodes;
         
         return (n * Math.exp(baseStep + 1) + (leastNodes - n) * Math.exp(baseStep));
-
-        // double exponent = diff / leastNodes;
-        // return Math.exp(exponent) * leastNodes;
-    	//return (Math.sqrt(Math.pow((c.pt.x - gp.x), 2) + Math.pow((c.pt.y - gp.y), 2)));// + Math.pow((map.getTile(c.pt) - map.getTile(gp)), 2)));
     }
 
     /// Creates the path to the goal.
@@ -109,19 +106,12 @@ public class DecentAI implements AIModule{
         final Point StartPoint = map.getStartPoint();
         final Point GoalPoint = map.getEndPoint();
 
-        //System.out.println("Goal:" + GoalPoint.x +" " + GoalPoint.y);
-
-         //Holds the neighbors
+        
         Point Neighbors[];
         
-        PNode CurrentNode = new PNode(StartPoint, null, 0, map.getTile(CurrentNode.pt));
+        PNode CurrentNode = new PNode(StartPoint, null, 0, map.getTile(StartPoint));
 
-        //Point pt1 = new Point(4,3);
-        //Point pt2 = new Point(12,9);
-
-
-        //int num = getLeastNodes(pt1, pt2);
-        //System.out.println(num);
+    
 
         Closed[CurrentNode.pt.x][CurrentNode.pt.y] = true;
 
@@ -136,13 +126,23 @@ public class DecentAI implements AIModule{
                 {
 
                     Point nPt = Neighbors[i];
-                    double curHeight = map.getTile(CurrentNode.pt);
+                    //double curHeight = map.getTile(CurrentNode.pt);
                     double neighHeight = map.getTile(nPt);
+                    int nLnodes = getLeastNodes(nPt, GoalPoint);
+                    int cLnodes = getLeastNodes(CurrentNode.pt, GoalPoint);
                     double neighborCost = map.getCost(CurrentNode.pt, nPt);
                     double prevCost = CurrentNode.cost;
-                    double heur = heuristic(CurrentNode.pt, GoalPoint, map);
+                    double curHeur = heuristic(CurrentNode.pt, GoalPoint, map);
+                    double heur = heuristic(nPt, GoalPoint, map);
                     double cost = neighborCost + prevCost + heur;
                     PNode p = new PNode(nPt, CurrentNode, cost, map.getTile(nPt));
+                    if (curHeur > heur + neighborCost)
+                    {
+                    	System.out.println(neighHeight);
+                        System.out.println("WTF" + CurrentNode.pt + " " + nPt);
+                        System.out.println(cLnodes);
+                        System.out.println(nLnodes);
+                    }
                     pnQueue.add(p); // test to see if actually contains anything
                     //System.out.println("Added node with cost: " + p.cost + " coordinates: " + p.pt + "Visited?" + Closed[nPt.x][nPt.y]);
 
